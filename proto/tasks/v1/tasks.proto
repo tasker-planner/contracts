@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package taskmanager.tasks.v1;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/tasker-planner/contracts/gen/go/tasks/v1;tasksv1";
+
+service TaskService {
+  rpc CreateTask(CreateTaskRequest) returns (Task);
+  rpc ListTasks(ListTasksRequest) returns (ListTasksResponse);
+  rpc UpdateTask(UpdateTaskRequest) returns (Task);
+  rpc DeleteTask(DeleteTaskRequest) returns (google.protobuf.Empty);
+  rpc RunDailyReport(RunDailyReportRequest) returns (RunDailyReportResponse);
+}
+
+message Task {
+  int64 id = 1;
+  int64 user_id = 2;
+  string title = 3;
+  string description = 4;
+  bool done = 5;
+  google.protobuf.Timestamp created_at = 6;
+  // Заполнено, только когда done = true.
+  google.protobuf.Timestamp completed_at = 7;
+}
+
+message CreateTaskRequest {
+  int64 user_id = 1;
+  // INVALID_ARGUMENT, если пустой.
+  string title = 2;
+  string description = 3;
+}
+
+enum DoneFilter {
+  DONE_FILTER_UNSPECIFIED = 0; // все задачи
+  DONE_FILTER_PENDING = 1;
+  DONE_FILTER_DONE = 2;
+}
+
+message ListTasksRequest {
+  int64 user_id = 1;
+  DoneFilter done_filter = 2;
+}
+
+message ListTasksResponse {
+  repeated Task tasks = 1;
+}
+
+message UpdateTaskRequest {
+  int64 user_id = 1;
+  int64 task_id = 2;
+  // Новые значения; применяются только поля, перечисленные в update_mask.
+  Task task = 3;
+  // Допустимые пути: "title", "description", "done".
+  // При done -> true сервис сам проставляет completed_at,
+  // при done -> false — сбрасывает его в null.
+  google.protobuf.FieldMask update_mask = 4;
+}
+
+message DeleteTaskRequest {
+  int64 user_id = 1;
+  int64 task_id = 2;
+}
+
+message RunDailyReportRequest {
+  // Дата отчёта в формате YYYY-MM-DD (день, за который считаем выполненные).
+  string date = 1;
+}
+
+message RunDailyReportResponse {
+  // Сколько писем поставлено в очередь на отправку.
+  int32 users_notified = 1;
+}

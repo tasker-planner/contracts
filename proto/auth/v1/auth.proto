@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package taskmanager.auth.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/tasker-planner/contracts/gen/go/auth/v1;authv1";
+
+service AuthService {
+  rpc IssueToken(IssueTokenRequest) returns (IssueTokenResponse);
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+}
+
+message IssueTokenRequest {
+  int64 user_id = 1;
+  string email = 2;
+}
+
+message IssueTokenResponse {
+  string token = 1;
+  google.protobuf.Timestamp expires_at = 2;
+}
+
+message ValidateTokenRequest {
+  string token = 1;
+}
+
+message ValidateTokenResponse {
+  int64 user_id = 1;
+  string email = 2;
+}

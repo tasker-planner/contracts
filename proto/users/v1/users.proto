@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package taskmanager.users.v1;
+
+option go_package = "github.com/tasker-planner/contracts/gen/go/users/v1;usersv1";
+
+service UserService {
+  rpc CreateUser(CreateUserRequest) returns (User);
+  rpc GetUser(GetUserRequest) returns (User);
+  rpc VerifyCredentials(VerifyCredentialsRequest) returns (User);
+}
+
+message User {
+  int64 id = 1;
+  string email = 2;
+}
+
+message CreateUserRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message GetUserRequest {
+  int64 user_id = 1;
+}
+
+message VerifyCredentialsRequest {
+  string email = 1;
+  string password = 2;
+}
