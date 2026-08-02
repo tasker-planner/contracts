@@ -12,7 +12,7 @@ service AuthService {
 }
 
 message IssueTokenRequest {
-  int64 user_id = 1;
+  string user_id = 1;
   string email = 2;
 }
 
@@ -26,6 +26,6 @@ message ValidateTokenRequest {
 }
 
 message ValidateTokenResponse {
-  int64 user_id = 1;
+  string user_id = 1;
   string email = 2;
 }

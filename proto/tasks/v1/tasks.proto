@@ -17,31 +17,29 @@ service TaskService {
 }
 
 message Task {
-  int64 id = 1;
-  int64 user_id = 2;
+  string id = 1;
+  string user_id = 2;
   string title = 3;
   string description = 4;
   bool done = 5;
   google.protobuf.Timestamp created_at = 6;
-  // Заполнено, только когда done = true.
   google.protobuf.Timestamp completed_at = 7;
 }
 
 message CreateTaskRequest {
-  int64 user_id = 1;
-  // INVALID_ARGUMENT, если пустой.
+  string user_id = 1;
   string title = 2;
   string description = 3;
 }
 
 enum DoneFilter {
-  DONE_FILTER_UNSPECIFIED = 0; // все задачи
+  DONE_FILTER_UNSPECIFIED = 0;
   DONE_FILTER_PENDING = 1;
   DONE_FILTER_DONE = 2;
 }
 
 message ListTasksRequest {
-  int64 user_id = 1;
+  string user_id = 1;
   DoneFilter done_filter = 2;
 }
 
@@ -50,27 +48,21 @@ message ListTasksResponse {
 }
 
 message UpdateTaskRequest {
-  int64 user_id = 1;
-  int64 task_id = 2;
-  // Новые значения; применяются только поля, перечисленные в update_mask.
+  string user_id = 1;
+  string task_id = 2;
   Task task = 3;
-  // Допустимые пути: "title", "description", "done".
-  // При done -> true сервис сам проставляет completed_at,
-  // при done -> false — сбрасывает его в null.
   google.protobuf.FieldMask update_mask = 4;
 }
 
 message DeleteTaskRequest {
-  int64 user_id = 1;
-  int64 task_id = 2;
+  string user_id = 1;
+  string task_id = 2;
 }
 
 message RunDailyReportRequest {
-  // Дата отчёта в формате YYYY-MM-DD (день, за который считаем выполненные).
   string date = 1;
 }
 
 message RunDailyReportResponse {
-  // Сколько писем поставлено в очередь на отправку.
   int32 users_notified = 1;
 }

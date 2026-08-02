@@ -11,7 +11,7 @@ service UserService {
 }
 
 message User {
-  int64 id = 1;
+  string id = 1;
   string email = 2;
 }
 
@@ -21,7 +21,7 @@ message CreateUserRequest {
 }
 
 message GetUserRequest {
-  int64 user_id = 1;
+  string user_id = 1;
 }
 
 message VerifyCredentialsRequest {
