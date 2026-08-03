@@ -2,30 +2,41 @@ syntax = "proto3";
 
 package taskmanager.auth.v1;
 
+import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/tasker-planner/contracts/gen/go/auth/v1;authv1";
 
 service AuthService {
-  rpc IssueToken(IssueTokenRequest) returns (IssueTokenResponse);
-  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+  rpc IssueTokenPair(IssueTokenPairRequest) returns (TokenPair);
+  rpc ValidateAccessToken(ValidateAccessTokenRequest) returns (ValidateAccessTokenResponse);
+  rpc RefreshTokenPair(RefreshTokenPairRequest) returns (TokenPair);
+  rpc RevokeRefreshToken(RevokeRefreshTokenRequest) returns (google.protobuf.Empty);
 }
 
-message IssueTokenRequest {
+message TokenPair {
+  string access_token = 1;
+  string refresh_token = 2;
+  google.protobuf.Timestamp access_expires_at = 3;
+  google.protobuf.Timestamp refresh_expires_at = 4;
+}
+
+message IssueTokenPairRequest {
   string user_id = 1;
-  string email = 2;
 }
 
-message IssueTokenResponse {
-  string token = 1;
-  google.protobuf.Timestamp expires_at = 2;
+message ValidateAccessTokenRequest {
+  string access_token = 1;
 }
 
-message ValidateTokenRequest {
-  string token = 1;
-}
-
-message ValidateTokenResponse {
+message ValidateAccessTokenResponse {
   string user_id = 1;
-  string email = 2;
+}
+
+message RefreshTokenPairRequest {
+  string refresh_token = 1;
+}
+
+message RevokeRefreshTokenRequest {
+  string refresh_token = 1;
 }
