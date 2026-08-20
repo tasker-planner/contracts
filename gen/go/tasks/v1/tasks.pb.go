@@ -73,6 +73,53 @@ func (DoneFilter) EnumDescriptor() ([]byte, []int) {
 	return file_tasks_v1_tasks_proto_rawDescGZIP(), []int{0}
 }
 
+type SortBy int32
+
+const (
+	SortBy_SORT_BY_UNSPECIFIED SortBy = 0
+	SortBy_SORT_BY_CREATED_AT  SortBy = 1
+	SortBy_SORT_BY_TITLE       SortBy = 2
+)
+
+var (
+	SortBy_name = map[int32]string{
+		0: "SORT_BY_UNSPECIFIED",
+		1: "SORT_BY_CREATED_AT",
+		2: "SORT_BY_TITLE",
+	}
+	SortBy_value = map[string]int32{
+		"SORT_BY_UNSPECIFIED": 0,
+		"SORT_BY_CREATED_AT":  1,
+		"SORT_BY_TITLE":       2,
+	}
+)
+
+func (x SortBy) Enum() *SortBy {
+	p := new(SortBy)
+	*p = x
+	return p
+}
+
+func (x SortBy) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (SortBy) Descriptor() protoreflect.EnumDescriptor {
+	return file_tasks_v1_tasks_proto_enumTypes[1].Descriptor()
+}
+
+func (SortBy) Type() protoreflect.EnumType {
+	return &file_tasks_v1_tasks_proto_enumTypes[1]
+}
+
+func (x SortBy) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+func (SortBy) EnumDescriptor() ([]byte, []int) {
+	return file_tasks_v1_tasks_proto_rawDescGZIP(), []int{1}
+}
+
 type Task struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -229,6 +276,9 @@ type ListTasksRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	DoneFilter    DoneFilter             `protobuf:"varint,2,opt,name=done_filter,json=doneFilter,proto3,enum=taskmanager.tasks.v1.DoneFilter" json:"done_filter,omitempty"`
+	Limit         int32                  `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`
+	Offset        int32                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
+	SortBy        SortBy                 `protobuf:"varint,5,opt,name=sort_by,json=sortBy,proto3,enum=taskmanager.tasks.v1.SortBy" json:"sort_by,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -277,9 +327,31 @@ func (x *ListTasksRequest) GetDoneFilter() DoneFilter {
 	return DoneFilter_DONE_FILTER_UNSPECIFIED
 }
 
+func (x *ListTasksRequest) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *ListTasksRequest) GetOffset() int32 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
+func (x *ListTasksRequest) GetSortBy() SortBy {
+	if x != nil {
+		return x.SortBy
+	}
+	return SortBy_SORT_BY_UNSPECIFIED
+}
+
 type ListTasksResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Tasks         []*Task                `protobuf:"bytes,1,rep,name=tasks,proto3" json:"tasks,omitempty"`
+	Total         int32                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -319,6 +391,13 @@ func (x *ListTasksResponse) GetTasks() []*Task {
 		return x.Tasks
 	}
 	return nil
+}
+
+func (x *ListTasksResponse) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
 }
 
 type UpdateTaskRequest struct {
@@ -546,13 +625,17 @@ const file_tasks_v1_tasks_proto_rawDesc = "" +
 	"\x11CreateTaskRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\"n\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\"\xd3\x01\n" +
 	"\x10ListTasksRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12A\n" +
 	"\vdone_filter\x18\x02 \x01(\x0e2 .taskmanager.tasks.v1.DoneFilterR\n" +
-	"doneFilter\"E\n" +
+	"doneFilter\x12\x14\n" +
+	"\x05limit\x18\x03 \x01(\x05R\x05limit\x12\x16\n" +
+	"\x06offset\x18\x04 \x01(\x05R\x06offset\x125\n" +
+	"\asort_by\x18\x05 \x01(\x0e2\x1c.taskmanager.tasks.v1.SortByR\x06sortBy\"[\n" +
 	"\x11ListTasksResponse\x120\n" +
-	"\x05tasks\x18\x01 \x03(\v2\x1a.taskmanager.tasks.v1.TaskR\x05tasks\"\xb2\x01\n" +
+	"\x05tasks\x18\x01 \x03(\v2\x1a.taskmanager.tasks.v1.TaskR\x05tasks\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x05R\x05total\"\xb2\x01\n" +
 	"\x11UpdateTaskRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x17\n" +
 	"\atask_id\x18\x02 \x01(\tR\x06taskId\x12.\n" +
@@ -570,7 +653,11 @@ const file_tasks_v1_tasks_proto_rawDesc = "" +
 	"DoneFilter\x12\x1b\n" +
 	"\x17DONE_FILTER_UNSPECIFIED\x10\x00\x12\x17\n" +
 	"\x13DONE_FILTER_PENDING\x10\x01\x12\x14\n" +
-	"\x10DONE_FILTER_DONE\x10\x022\xcd\x03\n" +
+	"\x10DONE_FILTER_DONE\x10\x02*L\n" +
+	"\x06SortBy\x12\x17\n" +
+	"\x13SORT_BY_UNSPECIFIED\x10\x00\x12\x16\n" +
+	"\x12SORT_BY_CREATED_AT\x10\x01\x12\x11\n" +
+	"\rSORT_BY_TITLE\x10\x022\xcd\x03\n" +
 	"\vTaskService\x12Q\n" +
 	"\n" +
 	"CreateTask\x12'.taskmanager.tasks.v1.CreateTaskRequest\x1a\x1a.taskmanager.tasks.v1.Task\x12\\\n" +
@@ -593,44 +680,46 @@ func file_tasks_v1_tasks_proto_rawDescGZIP() []byte {
 	return file_tasks_v1_tasks_proto_rawDescData
 }
 
-var file_tasks_v1_tasks_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_tasks_v1_tasks_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_tasks_v1_tasks_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_tasks_v1_tasks_proto_goTypes = []any{
 	(DoneFilter)(0),                // 0: taskmanager.tasks.v1.DoneFilter
-	(*Task)(nil),                   // 1: taskmanager.tasks.v1.Task
-	(*CreateTaskRequest)(nil),      // 2: taskmanager.tasks.v1.CreateTaskRequest
-	(*ListTasksRequest)(nil),       // 3: taskmanager.tasks.v1.ListTasksRequest
-	(*ListTasksResponse)(nil),      // 4: taskmanager.tasks.v1.ListTasksResponse
-	(*UpdateTaskRequest)(nil),      // 5: taskmanager.tasks.v1.UpdateTaskRequest
-	(*DeleteTaskRequest)(nil),      // 6: taskmanager.tasks.v1.DeleteTaskRequest
-	(*RunDailyReportRequest)(nil),  // 7: taskmanager.tasks.v1.RunDailyReportRequest
-	(*RunDailyReportResponse)(nil), // 8: taskmanager.tasks.v1.RunDailyReportResponse
-	(*timestamppb.Timestamp)(nil),  // 9: google.protobuf.Timestamp
-	(*fieldmaskpb.FieldMask)(nil),  // 10: google.protobuf.FieldMask
-	(*emptypb.Empty)(nil),          // 11: google.protobuf.Empty
+	(SortBy)(0),                    // 1: taskmanager.tasks.v1.SortBy
+	(*Task)(nil),                   // 2: taskmanager.tasks.v1.Task
+	(*CreateTaskRequest)(nil),      // 3: taskmanager.tasks.v1.CreateTaskRequest
+	(*ListTasksRequest)(nil),       // 4: taskmanager.tasks.v1.ListTasksRequest
+	(*ListTasksResponse)(nil),      // 5: taskmanager.tasks.v1.ListTasksResponse
+	(*UpdateTaskRequest)(nil),      // 6: taskmanager.tasks.v1.UpdateTaskRequest
+	(*DeleteTaskRequest)(nil),      // 7: taskmanager.tasks.v1.DeleteTaskRequest
+	(*RunDailyReportRequest)(nil),  // 8: taskmanager.tasks.v1.RunDailyReportRequest
+	(*RunDailyReportResponse)(nil), // 9: taskmanager.tasks.v1.RunDailyReportResponse
+	(*timestamppb.Timestamp)(nil),  // 10: google.protobuf.Timestamp
+	(*fieldmaskpb.FieldMask)(nil),  // 11: google.protobuf.FieldMask
+	(*emptypb.Empty)(nil),          // 12: google.protobuf.Empty
 }
 var file_tasks_v1_tasks_proto_depIdxs = []int32{
-	9,  // 0: taskmanager.tasks.v1.Task.created_at:type_name -> google.protobuf.Timestamp
-	9,  // 1: taskmanager.tasks.v1.Task.completed_at:type_name -> google.protobuf.Timestamp
+	10, // 0: taskmanager.tasks.v1.Task.created_at:type_name -> google.protobuf.Timestamp
+	10, // 1: taskmanager.tasks.v1.Task.completed_at:type_name -> google.protobuf.Timestamp
 	0,  // 2: taskmanager.tasks.v1.ListTasksRequest.done_filter:type_name -> taskmanager.tasks.v1.DoneFilter
-	1,  // 3: taskmanager.tasks.v1.ListTasksResponse.tasks:type_name -> taskmanager.tasks.v1.Task
-	1,  // 4: taskmanager.tasks.v1.UpdateTaskRequest.task:type_name -> taskmanager.tasks.v1.Task
-	10, // 5: taskmanager.tasks.v1.UpdateTaskRequest.update_mask:type_name -> google.protobuf.FieldMask
-	2,  // 6: taskmanager.tasks.v1.TaskService.CreateTask:input_type -> taskmanager.tasks.v1.CreateTaskRequest
-	3,  // 7: taskmanager.tasks.v1.TaskService.ListTasks:input_type -> taskmanager.tasks.v1.ListTasksRequest
-	5,  // 8: taskmanager.tasks.v1.TaskService.UpdateTask:input_type -> taskmanager.tasks.v1.UpdateTaskRequest
-	6,  // 9: taskmanager.tasks.v1.TaskService.DeleteTask:input_type -> taskmanager.tasks.v1.DeleteTaskRequest
-	7,  // 10: taskmanager.tasks.v1.TaskService.RunDailyReport:input_type -> taskmanager.tasks.v1.RunDailyReportRequest
-	1,  // 11: taskmanager.tasks.v1.TaskService.CreateTask:output_type -> taskmanager.tasks.v1.Task
-	4,  // 12: taskmanager.tasks.v1.TaskService.ListTasks:output_type -> taskmanager.tasks.v1.ListTasksResponse
-	1,  // 13: taskmanager.tasks.v1.TaskService.UpdateTask:output_type -> taskmanager.tasks.v1.Task
-	11, // 14: taskmanager.tasks.v1.TaskService.DeleteTask:output_type -> google.protobuf.Empty
-	8,  // 15: taskmanager.tasks.v1.TaskService.RunDailyReport:output_type -> taskmanager.tasks.v1.RunDailyReportResponse
-	11, // [11:16] is the sub-list for method output_type
-	6,  // [6:11] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	1,  // 3: taskmanager.tasks.v1.ListTasksRequest.sort_by:type_name -> taskmanager.tasks.v1.SortBy
+	2,  // 4: taskmanager.tasks.v1.ListTasksResponse.tasks:type_name -> taskmanager.tasks.v1.Task
+	2,  // 5: taskmanager.tasks.v1.UpdateTaskRequest.task:type_name -> taskmanager.tasks.v1.Task
+	11, // 6: taskmanager.tasks.v1.UpdateTaskRequest.update_mask:type_name -> google.protobuf.FieldMask
+	3,  // 7: taskmanager.tasks.v1.TaskService.CreateTask:input_type -> taskmanager.tasks.v1.CreateTaskRequest
+	4,  // 8: taskmanager.tasks.v1.TaskService.ListTasks:input_type -> taskmanager.tasks.v1.ListTasksRequest
+	6,  // 9: taskmanager.tasks.v1.TaskService.UpdateTask:input_type -> taskmanager.tasks.v1.UpdateTaskRequest
+	7,  // 10: taskmanager.tasks.v1.TaskService.DeleteTask:input_type -> taskmanager.tasks.v1.DeleteTaskRequest
+	8,  // 11: taskmanager.tasks.v1.TaskService.RunDailyReport:input_type -> taskmanager.tasks.v1.RunDailyReportRequest
+	2,  // 12: taskmanager.tasks.v1.TaskService.CreateTask:output_type -> taskmanager.tasks.v1.Task
+	5,  // 13: taskmanager.tasks.v1.TaskService.ListTasks:output_type -> taskmanager.tasks.v1.ListTasksResponse
+	2,  // 14: taskmanager.tasks.v1.TaskService.UpdateTask:output_type -> taskmanager.tasks.v1.Task
+	12, // 15: taskmanager.tasks.v1.TaskService.DeleteTask:output_type -> google.protobuf.Empty
+	9,  // 16: taskmanager.tasks.v1.TaskService.RunDailyReport:output_type -> taskmanager.tasks.v1.RunDailyReportResponse
+	12, // [12:17] is the sub-list for method output_type
+	7,  // [7:12] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_tasks_v1_tasks_proto_init() }
@@ -643,7 +732,7 @@ func file_tasks_v1_tasks_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tasks_v1_tasks_proto_rawDesc), len(file_tasks_v1_tasks_proto_rawDesc)),
-			NumEnums:      1,
+			NumEnums:      2,
 			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
